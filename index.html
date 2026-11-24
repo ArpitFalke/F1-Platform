@@ -32,6 +32,7 @@
                 <nav class="nav-links" id="navLinks">
                     <a href="#" class="nav-link active" data-section="home"><i class="fas fa-home"></i> Home</a>
                     <a href="#" class="nav-link" data-section="live"><i class="fas fa-broadcast-tower"></i> <span class="nav-live-dot"></span> Live</a>
+                    <a href="#" class="nav-link" data-section="highlights"><i class="fas fa-play-circle"></i> Highlights</a>
                     <a href="#" class="nav-link" data-section="schedule"><i class="fas fa-calendar-alt"></i> Schedule</a>
                     <a href="#" class="nav-link" data-section="circuits"><i class="fas fa-route"></i> Circuits</a>
                     <a href="#" class="nav-link" data-section="standings"><i class="fas fa-trophy"></i> Standings</a>
@@ -62,6 +63,7 @@
     <div class="mobile-nav" id="mobileNav">
         <a href="#" class="mobile-nav-link active" data-section="home"><i class="fas fa-home"></i> Home</a>
         <a href="#" class="mobile-nav-link" data-section="live"><i class="fas fa-broadcast-tower"></i> Live</a>
+        <a href="#" class="mobile-nav-link" data-section="highlights"><i class="fas fa-play-circle"></i> Highlights</a>
         <a href="#" class="mobile-nav-link" data-section="schedule"><i class="fas fa-calendar-alt"></i> Schedule</a>
         <a href="#" class="mobile-nav-link" data-section="circuits"><i class="fas fa-route"></i> Circuits</a>
         <a href="#" class="mobile-nav-link" data-section="standings"><i class="fas fa-trophy"></i> Standings</a>
@@ -277,6 +279,40 @@
             </div>
         </section>
 
+        <!-- ===== HIGHLIGHTS SECTION ===== -->
+        <section id="highlights" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <div>
+                        <h2><i class="fas fa-play-circle"></i> 2026 Race Highlights Hub</h2>
+                        <p class="section-subtitle">Official Race Recaps, Video Highlights, Key Battles & DHL Fastest Laps for Every 2026 Grand Prix</p>
+                    </div>
+                    <div class="tab-switcher" id="highlightsFilterTabs">
+                        <button class="tab active" data-highlight-filter="all">All Races (21)</button>
+                        <button class="tab" data-highlight-filter="latest">Latest</button>
+                        <button class="tab" data-highlight-filter="classic">Classic Thrillers</button>
+                        <button class="tab" data-highlight-filter="street">Street Circuits</button>
+                    </div>
+                </div>
+
+                <!-- Highlights Search & Quick Stat Bar -->
+                <div class="highlights-subbar">
+                    <div class="highlights-search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="highlightsSearchInput" placeholder="Filter highlights by Grand Prix, driver, team..." oninput="filterHighlights(this.value)">
+                    </div>
+                    <div class="highlights-counter-badge">
+                        <i class="fas fa-video"></i> <span id="highlightsCountDisplay">21 Completed Races Available</span>
+                    </div>
+                </div>
+
+                <!-- Highlights Cards Grid -->
+                <div class="highlights-grid" id="highlightsGrid">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+
         <!-- ===== SCHEDULE SECTION ===== -->
         <section id="schedule" class="section">
             <div class="container">
@@ -381,6 +417,17 @@
         </div>
     </div>
 
+    <!-- Highlight Video Player & Race Details Modal -->
+    <div id="highlightModal" class="highlight-modal">
+        <div class="highlight-modal-overlay" onclick="closeHighlightModal()"></div>
+        <div class="highlight-modal-dialog">
+            <button class="modal-close-btn" onclick="closeHighlightModal()"><i class="fas fa-times"></i></button>
+            <div id="highlightModalContent">
+                <!-- Injected dynamically by openHighlightModal() -->
+            </div>
+        </div>
+    </div>
+
     <!-- Notification Panel -->
     <div class="notif-panel" id="notifPanel">
         <div class="notif-header">
@@ -391,12 +438,19 @@
             <div class="notif-item unread" onclick="navigateTo('standings')">
                 <i class="fas fa-trophy notif-icon gold"></i>
                 <div>
-                    <p class="notif-text">Title Fight: Norris 423 pts vs Verstappen 421 pts</p>
-                    <span class="notif-time">Round 23 Decider</span>
+                    <p class="notif-text">Championship Fight: Antonelli 402 pts vs Verstappen 304 pts</p>
+                    <span class="notif-time">Round 22 Qatar Preview</span>
+                </div>
+            </div>
+            <div class="notif-item unread" onclick="navigateTo('highlights')">
+                <i class="fas fa-video notif-icon red"></i>
+                <div>
+                    <p class="notif-text">Las Vegas GP Highlights: Verstappen's masterclass win</p>
+                    <span class="notif-time">Watch Highlights</span>
                 </div>
             </div>
             <div class="notif-item unread" onclick="navigateTo('live')">
-                <i class="fas fa-flag-checkered notif-icon red"></i>
+                <i class="fas fa-broadcast-tower notif-icon red"></i>
                 <div>
                     <p class="notif-text">Qatar Grand Prix: Live session broadcast available</p>
                     <span class="notif-time">Watch stream</span>
@@ -431,6 +485,7 @@
                 <div class="footer-col">
                     <h4>Race Navigation</h4>
                     <a href="#" onclick="navigateTo('live'); return false;">Live Stream Feed</a>
+                    <a href="#" onclick="navigateTo('highlights'); return false;">Race Highlights Hub</a>
                     <a href="#" onclick="navigateTo('circuits'); return false;">Circuit Maps</a>
                     <a href="#" onclick="navigateTo('schedule'); return false;">2026 Calendar</a>
                     <a href="#" onclick="navigateTo('standings'); return false;">Championship Standings</a>
@@ -456,11 +511,20 @@
         </div>
     </footer>
 
-    <!-- Load Auth System first -->
+    <!-- Modular F1 Season Databases -->
+    <script src="data/circuits.js"></script>
+    <script src="data/drivers.js"></script>
+    <script src="data/teams.js"></script>
+    <script src="data/races.js"></script>
+    <script src="data/highlights.js"></script>
+
+    <!-- Authentication & Fan Club -->
     <script src="auth.js"></script>
-    <!-- Load Chat System second -->
+
+    <!-- Live Paddock Chat -->
     <script src="chat.js"></script>
-    <!-- Load Core App logic third -->
+
+    <!-- Core App Logic & Orchestration -->
     <script src="app.js"></script>
 </body>
 </html>
