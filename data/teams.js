@@ -1,8 +1,6 @@
 // ==========================================
 // F1 STREAM — 2026 Teams Database
-// Official Data from Formula1.com
-// https://www.formula1.com/en/results/2026/team
-// https://www.formula1.com/en/teams
+// Created by ArpitFalke (https://github.com/ArpitFalke)
 // ==========================================
 
 window.F1_TEAMS = [

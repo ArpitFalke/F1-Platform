@@ -1,8 +1,7 @@
 // ==========================================
 // F1 STREAM — Circuits Database
 // Formula 1 2026 Season Circuits & Telemetry
-// Cross-referenced with Formula-Timer & Formula1.com
-// https://formula-timer.com/circuit
+// Created by ArpitFalke (https://github.com/ArpitFalke)
 // ==========================================
 
 window.F1_CIRCUITS = [
@@ -24,7 +23,7 @@ window.F1_CIRCUITS = [
         type: "Street Circuit",
         category: ["all", "street", "high-speed"],
         imgSlug: "Australia",
-        // Formula-Timer Telemetry
+        // Circuit Telemetry Specs
         fullThrottle: "70%",
         elevationChange: "2.6 m",
         downforce: "Medium-High",
@@ -67,7 +66,7 @@ window.F1_CIRCUITS = [
         type: "Permanent Circuit",
         category: ["all", "permanent", "high-speed"],
         imgSlug: "China",
-        // Formula-Timer Telemetry
+        // Circuit Telemetry Specs
         fullThrottle: "56%",
         elevationChange: "7.4 m",
         downforce: "Medium",
@@ -110,7 +109,7 @@ window.F1_CIRCUITS = [
         type: "Permanent Circuit",
         category: ["all", "permanent", "high-downforce"],
         imgSlug: "Japan",
-        // Formula-Timer Telemetry
+        // Circuit Telemetry Specs
         fullThrottle: "67%",
         elevationChange: "40.4 m",
         downforce: "High",
@@ -153,7 +152,7 @@ window.F1_CIRCUITS = [
         type: "Semi-Permanent Circuit",
         category: ["all", "street"],
         imgSlug: "Miami",
-        // Formula-Timer Telemetry
+        // Circuit Telemetry Specs
         fullThrottle: "58%",
         elevationChange: "7.0 m",
         downforce: "Medium",
@@ -196,7 +195,7 @@ window.F1_CIRCUITS = [
         type: "Semi-Permanent Circuit",
         category: ["all", "street", "high-speed"],
         imgSlug: "Canada",
-        // Formula-Timer Telemetry
+        // Circuit Telemetry Specs
         fullThrottle: "60%",
         elevationChange: "5.2 m",
         downforce: "Low",
@@ -239,7 +238,7 @@ window.F1_CIRCUITS = [
         type: "Street Circuit",
         category: ["all", "street", "high-downforce"],
         imgSlug: "Monaco",
-        // Formula-Timer Telemetry
+        // Circuit Telemetry Specs
         fullThrottle: "34%",
         elevationChange: "42.0 m",
         downforce: "Maximum",
@@ -282,7 +281,7 @@ window.F1_CIRCUITS = [
         type: "Permanent Circuit",
         category: ["all", "permanent", "high-downforce"],
         imgSlug: "Spain",
-        // Formula-Timer Telemetry
+        // Circuit Telemetry Specs
         fullThrottle: "65%",
         elevationChange: "30.0 m",
         downforce: "High",
@@ -325,7 +324,7 @@ window.F1_CIRCUITS = [
         type: "Permanent Circuit",
         category: ["all", "permanent", "high-speed"],
         imgSlug: "Austria",
-        // Formula-Timer Telemetry
+        // Circuit Telemetry Specs
         fullThrottle: "77%",
         elevationChange: "65.0 m",
         downforce: "Medium-Low",
@@ -368,7 +367,7 @@ window.F1_CIRCUITS = [
         type: "Permanent Circuit",
         category: ["all", "permanent", "high-downforce"],
         imgSlug: "Great_Britain",
-        // Formula-Timer Telemetry
+        // Circuit Telemetry Specs
         fullThrottle: "76%",
         elevationChange: "11.3 m",
         downforce: "High",
@@ -411,7 +410,7 @@ window.F1_CIRCUITS = [
         type: "Permanent Circuit",
         category: ["all", "permanent", "high-speed"],
         imgSlug: "Belgium",
-        // Formula-Timer Telemetry
+        // Circuit Telemetry Specs
         fullThrottle: "70%",
         elevationChange: "102.2 m",
         downforce: "Low-Medium",
@@ -454,7 +453,7 @@ window.F1_CIRCUITS = [
         type: "Permanent Circuit",
         category: ["all", "permanent", "high-downforce"],
         imgSlug: "Hungary",
-        // Formula-Timer Telemetry
+        // Circuit Telemetry Specs
         fullThrottle: "55%",
         elevationChange: "35.0 m",
         downforce: "Maximum",
@@ -497,7 +496,7 @@ window.F1_CIRCUITS = [
         type: "Permanent Circuit",
         category: ["all", "permanent", "high-downforce"],
         imgSlug: "Netherlands",
-        // Formula-Timer Telemetry
+        // Circuit Telemetry Specs
         fullThrottle: "60%",
         elevationChange: "15.0 m",
         downforce: "High",
@@ -540,7 +539,7 @@ window.F1_CIRCUITS = [
         type: "Permanent Circuit",
         category: ["all", "permanent", "high-speed"],
         imgSlug: "Italy",
-        // Formula-Timer Telemetry
+        // Circuit Telemetry Specs
         fullThrottle: "80%",
         elevationChange: "12.8 m",
         downforce: "Minimum",
@@ -583,7 +582,7 @@ window.F1_CIRCUITS = [
         type: "Hybrid Street Circuit",
         category: ["all", "street", "high-downforce"],
         imgSlug: "Spain",
-        // Formula-Timer Telemetry
+        // Circuit Telemetry Specs
         fullThrottle: "60%",
         elevationChange: "18.0 m",
         downforce: "Medium-High",
@@ -626,7 +625,7 @@ window.F1_CIRCUITS = [
         type: "Street Circuit",
         category: ["all", "street", "high-speed"],
         imgSlug: "Baku",
-        // Formula-Timer Telemetry
+        // Circuit Telemetry Specs
         fullThrottle: "73%",
         elevationChange: "24.0 m",
         downforce: "Low",
@@ -669,7 +668,7 @@ window.F1_CIRCUITS = [
         type: "Permanent Circuit",
         category: ["all", "permanent", "high-speed"],
         imgSlug: "Bahrain",
-        // Formula-Timer Telemetry
+        // Circuit Telemetry Specs
         fullThrottle: "65%",
         elevationChange: "17.0 m",
         downforce: "Medium",
@@ -712,7 +711,7 @@ window.F1_CIRCUITS = [
         type: "Street Circuit",
         category: ["all", "street", "high-downforce"],
         imgSlug: "Singapore",
-        // Formula-Timer Telemetry
+        // Circuit Telemetry Specs
         fullThrottle: "48%",
         elevationChange: "5.3 m",
         downforce: "Maximum",
@@ -755,7 +754,7 @@ window.F1_CIRCUITS = [
         type: "Permanent Circuit",
         category: ["all", "permanent", "high-downforce"],
         imgSlug: "USA",
-        // Formula-Timer Telemetry
+        // Circuit Telemetry Specs
         fullThrottle: "62%",
         elevationChange: "41.0 m",
         downforce: "High",
@@ -798,7 +797,7 @@ window.F1_CIRCUITS = [
         type: "Permanent Circuit",
         category: ["all", "permanent", "high-speed"],
         imgSlug: "Mexico",
-        // Formula-Timer Telemetry
+        // Circuit Telemetry Specs
         fullThrottle: "50%",
         elevationChange: "2.8 m (2,285m Alt.)",
         downforce: "Maximum Setup (Acts as Low)",
@@ -841,7 +840,7 @@ window.F1_CIRCUITS = [
         type: "Permanent Circuit",
         category: ["all", "permanent", "high-downforce"],
         imgSlug: "Brazil",
-        // Formula-Timer Telemetry
+        // Circuit Telemetry Specs
         fullThrottle: "65%",
         elevationChange: "40.0 m",
         downforce: "Medium-High",
@@ -884,7 +883,7 @@ window.F1_CIRCUITS = [
         type: "Street Circuit",
         category: ["all", "street", "high-speed"],
         imgSlug: "Las_Vegas",
-        // Formula-Timer Telemetry
+        // Circuit Telemetry Specs
         fullThrottle: "78%",
         elevationChange: "5.0 m",
         downforce: "Low",
@@ -927,7 +926,7 @@ window.F1_CIRCUITS = [
         type: "Permanent Circuit",
         category: ["all", "permanent", "high-downforce"],
         imgSlug: "Qatar",
-        // Formula-Timer Telemetry
+        // Circuit Telemetry Specs
         fullThrottle: "68%",
         elevationChange: "6.0 m",
         downforce: "High",
@@ -970,7 +969,7 @@ window.F1_CIRCUITS = [
         type: "Permanent Circuit",
         category: ["all", "permanent", "high-speed"],
         imgSlug: "Abu_Dhabi",
-        // Formula-Timer Telemetry
+        // Circuit Telemetry Specs
         fullThrottle: "63%",
         elevationChange: "11.0 m",
         downforce: "Medium",

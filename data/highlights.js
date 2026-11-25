@@ -1,7 +1,7 @@
 // ==========================================
 // F1 STREAM — 2026 Race Highlights Hub
-// Official Race Recaps, Podiums, Fastest Laps & Key Moments
-// Formula 1 2026 Season Coverage
+// 2026 Race Recaps, Podiums, Fastest Laps & Key Moments
+// Created by ArpitFalke (https://github.com/ArpitFalke)
 // ==========================================
 
 window.F1_HIGHLIGHTS = [
@@ -26,14 +26,12 @@ window.F1_HIGHLIGHTS = [
         category: ["all", "latest", "street"],
         thumbnail: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/fom-website/2026/races/las-vegas-gp.jpg",
         fallbackThumbnail: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80",
-        youtubeId: "dQw4w9WgXcQ", // Formula 1 Highlight Link
-        f1OfficialUrl: "https://www.formula1.com/en/results/2026/races/1271/las-vegas/race-result",
         summary: "Max Verstappen showcased absolute brilliance under the dazzling neon lights of Las Vegas, executing a clinical undercut against the Mercedes pair to take his 4th victory of 2026. Kimi Antonelli defended stoutly to seal P2, extending his championship advantage as the season heads towards Qatar.",
         keyMoments: [
             "Lap 1: Verstappen lunges inside Russell at Turn 1 to take the race lead.",
             "Lap 14: Virtual Safety Car deployed after midfield clash down the Koval Lane.",
             "Lap 31: Kimi Antonelli pulls off a daring DRS slipstream move on Russell along the Strip.",
-            "Lap 48: Liam Lawson sets the DHL Fastest Lap of the Grand Prix on fresh soft tyres.",
+            "Lap 48: Liam Lawson sets the Fastest Lap of the Grand Prix on fresh soft tyres.",
             "Lap 50: Verstappen takes the chequered flag 3.2 seconds clear of Antonelli."
         ]
     },
@@ -58,7 +56,6 @@ window.F1_HIGHLIGHTS = [
         category: ["all", "latest", "classic"],
         thumbnail: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/fom-website/2026/races/brazil-gp.jpg",
         fallbackThumbnail: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80",
-        f1OfficialUrl: "https://www.formula1.com/en/results/2026/races/1270/brazil/race-result",
         summary: "In trademark Interlagos wet-dry mayhem, Lando Norris produced a masterclass drive in tricky conditions to capture McLaren's 3rd win of the year. Championship leader Antonelli finished a resilient second with fastest lap honors.",
         keyMoments: [
             "Lap 4: Sudden rain shower drenches the Senna 'S', triggering frantic pit lane stops for intermediates.",
@@ -89,13 +86,12 @@ window.F1_HIGHLIGHTS = [
         category: ["all", "latest"],
         thumbnail: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/fom-website/2026/races/mexico-gp.jpg",
         fallbackThumbnail: "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=800&q=80",
-        f1OfficialUrl: "https://www.formula1.com/en/results/2026/races/1269/mexico/race-result",
         summary: "Max Verstappen conquered the thin altitude air of Mexico City with an imperious drive from pole, holding off fierce pressure from George Russell. Lewis Hamilton thrilled the Foro Sol stadium crowd by charging to third on the podium with fastest lap.",
         keyMoments: [
             "Lap 1: Long 800m slipstream run into Turn 1 sees four cars wide; Verstappen brakes latest to hold P1.",
             "Lap 28: Red flag stoppage for barrier repairs after midfield incident.",
             "Lap 52: Russell pressures Verstappen, setting matching purple sector times.",
-            "Lap 69: Hamilton pits for fresh softs and snatches DHL Fastest Lap with a 1:19.268.",
+            "Lap 69: Hamilton pits for fresh softs and snatches Fastest Lap with a 1:19.268.",
             "Lap 71: Verstappen takes the win and enters the iconic baseball stadium podium."
         ]
     },
@@ -120,7 +116,6 @@ window.F1_HIGHLIGHTS = [
         category: ["all", "latest"],
         thumbnail: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/fom-website/2026/races/usa-gp.jpg",
         fallbackThumbnail: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80",
-        f1OfficialUrl: "https://www.formula1.com/en/results/2026/races/1268/united-states/race-result",
         summary: "Kimi Antonelli delivered a statement drive in Austin, managing tyre wear through COTA's high-g Esses to claim his 7th victory of 2026. A thrilling wheel-to-wheel scrap saw Lewis Hamilton fend off Max Verstappen for second.",
         keyMoments: [
             "Lap 1: Uphill charge into Turn 1 creates drama as Leclerc and Norris make slight contact.",
@@ -151,7 +146,6 @@ window.F1_HIGHLIGHTS = [
         category: ["all", "street", "classic"],
         thumbnail: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/fom-website/2026/races/singapore-gp.jpg",
         fallbackThumbnail: "https://images.unsplash.com/photo-1565043666747-69f6646db940?auto=format&fit=crop&w=800&q=80",
-        f1OfficialUrl: "https://www.formula1.com/en/results/2026/races/1267/singapore/race-result",
         summary: "In a grueling 62-lap Singapore night race testing driver fitness to the limit, Max Verstappen controlled the pace from the front to take victory over Lando Norris. Ferrari's Leclerc bagged the fastest lap on his way to third.",
         keyMoments: [
             "Lap 1: Verstappen fends off Norris into the tight Turn 1-2-3 complex.",
@@ -181,7 +175,6 @@ window.F1_HIGHLIGHTS = [
         category: ["all"],
         thumbnail: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/fom-website/2026/races/bahrain-gp.jpg",
         fallbackThumbnail: "https://images.unsplash.com/photo-1506015391300-4802dc74de2e?auto=format&fit=crop&w=800&q=80",
-        f1OfficialUrl: "https://www.formula1.com/en/results/2026/races/1266/bahrain/race-result",
         summary: "Red Bull Racing found supreme form in Sakhir as Max Verstappen scored a sensational Grand Slam: pole, win, every lap led, and the fastest lap (1:38.220). Antonelli and Hamilton completed a star-studded podium.",
         keyMoments: [
             "Lap 1: Clean getaway for Verstappen as Antonelli and Hamilton battle for P2 through Turn 4.",
@@ -211,7 +204,6 @@ window.F1_HIGHLIGHTS = [
         category: ["all", "street"],
         thumbnail: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/fom-website/2026/races/baku-gp.jpg",
         fallbackThumbnail: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=800&q=80",
-        f1OfficialUrl: "https://www.formula1.com/en/results/2026/races/1265/azerbaijan/race-result",
         summary: "George Russell threaded the needle through Baku's medieval castle section with supreme poise, fending off Leclerc's pole-sitting Ferrari to capture his third victory of the season alongside the fastest lap.",
         keyMoments: [
             "Lap 1: Leclerc holds lead into Turn 1 while Russell slots into P2.",
@@ -241,7 +233,6 @@ window.F1_HIGHLIGHTS = [
         category: ["all", "street"],
         thumbnail: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/fom-website/2026/races/madrid-gp.jpg",
         fallbackThumbnail: "https://images.unsplash.com/photo-1539037116277-4db20889f2d4?auto=format&fit=crop&w=800&q=80",
-        f1OfficialUrl: "https://www.formula1.com/en/results/2026/races/1264/spain/race-result",
         summary: "Formula 1's highly-anticipated debut at the new IFEMA Madrid hybrid circuit was conquered by Kimi Antonelli. Leading a dominant Mercedes 1-2, the young Italian showed tactical maturity on the new banked corners.",
         keyMoments: [
             "Lap 1: Antonelli sweeps around the outside into the banked Turn 1.",
@@ -270,8 +261,7 @@ window.F1_HIGHLIGHTS = [
         isLatest: false,
         category: ["all", "classic"],
         thumbnail: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/fom-website/2026/races/italy-gp.jpg",
-        fallbackThumbnail: "https://images.unsplash.com/photo-1541348263662-e0c8de4259ba?auto=format&fit=crop&w=800&q=80",
-        f1OfficialUrl: "https://www.formula1.com/en/results/2026/races/1263/italy/race-result",
+        fallbackThumbnail: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80",
         summary: "In a race that sent Italian fans into delirium, Bologna-born Kimi Antonelli won his home Grand Prix at Monza, leading Lewis Hamilton in the Ferrari. Antonelli claimed the fastest lap with an electric 1:23.504.",
         keyMoments: [
             "Lap 1: Slipstream battles at 350 km/h into the Prima Variante chicane.",
@@ -301,7 +291,6 @@ window.F1_HIGHLIGHTS = [
         category: ["all", "classic"],
         thumbnail: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/fom-website/2026/races/netherlands-gp.jpg",
         fallbackThumbnail: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80",
-        f1OfficialUrl: "https://www.formula1.com/en/results/2026/races/1262/netherlands/race-result",
         summary: "Lando Norris produced an extraordinary 22-second victory over hometown hero Max Verstappen on the undulating dunes of Zandvoort. Charles Leclerc notched another podium and the fastest lap for Ferrari.",
         keyMoments: [
             "Lap 1: Verstappen grabs the lead into Tarzan corner to the delight of the Dutch crowd.",
@@ -331,7 +320,6 @@ window.F1_HIGHLIGHTS = [
         category: ["all"],
         thumbnail: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/fom-website/2026/races/hungary-gp.jpg",
         fallbackThumbnail: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80",
-        f1OfficialUrl: "https://www.formula1.com/en/results/2026/races/1261/hungary/race-result",
         summary: "McLaren locked out the front row and converted it into a flawless 1-2 triumph in the scorching heat of Budapest. Norris held off teammate Piastri in a tactical chess match around the twisty Hungaroring.",
         keyMoments: [
             "Lap 1: Papaya cars navigate Turn 1 side by side, Norris emerging ahead.",
@@ -361,7 +349,6 @@ window.F1_HIGHLIGHTS = [
         category: ["all", "classic"],
         thumbnail: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/fom-website/2026/races/belgium-gp.jpg",
         fallbackThumbnail: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80",
-        f1OfficialUrl: "https://www.formula1.com/en/results/2026/races/1260/belgium/race-result",
         summary: "The legendary Ardennes roller coaster produced an instant classic in mixed weather. Antonelli tackled Eau Rouge and Raidillon with fearless commitment, holding off Verstappen while Pierre Gasly delivered Alpine's first podium of 2026.",
         keyMoments: [
             "Lap 1: Roaring start as spray blinds the pack heading up the Kemmel Straight.",
@@ -391,7 +378,6 @@ window.F1_HIGHLIGHTS = [
         category: ["all", "classic"],
         thumbnail: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/fom-website/2026/races/great-britain-gp.jpg",
         fallbackThumbnail: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80",
-        f1OfficialUrl: "https://www.formula1.com/en/results/2026/races/1259/great-britain/race-result",
         summary: "Silverstone bore witness to an iconic Ferrari 1-2 as Charles Leclerc held off teammate Lewis Hamilton across 52 heart-stopping laps. 160,000 British fans cheered both scarlet cars as they edged Norris' McLaren.",
         keyMoments: [
             "Lap 1: High speed entry into Copse corner sees 3-wide action.",
@@ -421,7 +407,6 @@ window.F1_HIGHLIGHTS = [
         category: ["all"],
         thumbnail: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/fom-website/2026/races/austria-gp.jpg",
         fallbackThumbnail: "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=800&q=80",
-        f1OfficialUrl: "https://www.formula1.com/en/results/2026/races/1258/austria/race-result",
         summary: "George Russell delivered an inch-perfect drive in the Styrian mountains to score victory over Mercedes teammate Antonelli. McLaren's Piastri grabbed third after a late race charge through DRS trains.",
         keyMoments: [
             "Lap 1: Heavy braking into uphill Turn 3 catches out the midfield runners.",
@@ -450,8 +435,7 @@ window.F1_HIGHLIGHTS = [
         isLatest: false,
         category: ["all", "classic"],
         thumbnail: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/fom-website/2026/races/spain-barcelona-gp.jpg",
-        fallbackThumbnail: "https://images.unsplash.com/photo-1541348263662-e0c8de4259ba?auto=format&fit=crop&w=800&q=80",
-        f1OfficialUrl: "https://www.formula1.com/en/results/2026/races/1257/spain/race-result",
+        fallbackThumbnail: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80",
         summary: "One of the most emotional moments in Formula 1 history: Lewis Hamilton won his first Grand Prix in Ferrari scarlet, setting the fastest lap and leading home teammate Charles Leclerc for a glorious 1-2 in Montmeló.",
         keyMoments: [
             "Lap 1: Hamilton sweeps into Turn 1 from pole position to control the early phase.",
@@ -482,7 +466,6 @@ window.F1_HIGHLIGHTS = [
         category: ["all", "street", "classic"],
         thumbnail: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/fom-website/2026/races/monaco-gp.jpg",
         fallbackThumbnail: "https://images.unsplash.com/photo-1506015391300-4802dc74de2e?auto=format&fit=crop&w=800&q=80",
-        f1OfficialUrl: "https://www.formula1.com/en/results/2026/races/1256/monaco/race-result",
         summary: "At just 19 years old, Kimi Antonelli wrote his name into motorsport folklore by winning the Monaco Grand Prix from pole. Grazing the Sainte Devote and Swimming Pool barriers with millimeter precision, he resisted home favorite Charles Leclerc.",
         keyMoments: [
             "Lap 1: Immaculate launch for Antonelli up the Sainte Devote hill into Beau Rivage.",
@@ -513,7 +496,6 @@ window.F1_HIGHLIGHTS = [
         category: ["all", "street"],
         thumbnail: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/fom-website/2026/races/canada-gp.jpg",
         fallbackThumbnail: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=800&q=80",
-        f1OfficialUrl: "https://www.formula1.com/en/results/2026/races/1255/canada/race-result",
         summary: "Montreal delivered its usual dose of adrenaline as multiple cars clipped the notorious Wall of Champions. Antonelli remained unshakable at the front, winning ahead of Norris and setting the fastest lap.",
         keyMoments: [
             "Lap 1: Hard braking into the hairpin tests front brake balance.",
@@ -543,7 +525,6 @@ window.F1_HIGHLIGHTS = [
         category: ["all", "street"],
         thumbnail: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/fom-website/2026/races/miami-gp.jpg",
         fallbackThumbnail: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80",
-        f1OfficialUrl: "https://www.formula1.com/en/results/2026/races/1254/miami/race-result",
         summary: "Under the Florida sunshine around Hard Rock Stadium, Antonelli put on a masterclass in tyre conservation and race pace, keeping Ferrari's Charles Leclerc and Max Verstappen at arm's length.",
         keyMoments: [
             "Lap 1: Turn 1 melee as cars bunch up on entry.",
@@ -573,7 +554,6 @@ window.F1_HIGHLIGHTS = [
         category: ["all", "classic"],
         thumbnail: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/fom-website/2026/races/japan-gp.jpg",
         fallbackThumbnail: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80",
-        f1OfficialUrl: "https://www.formula1.com/en/results/2026/races/1253/japan/race-result",
         summary: "At one of motorsport's purest driver challenges, Antonelli took pole, win, and fastest lap at Suzuka. Passing through 130R and the Esses with jaw-dropping commitment, the teenager proved his title credentials.",
         keyMoments: [
             "Lap 1: Antonelli leads Hamilton cleanly through the iconic 'S' Curves.",
@@ -603,7 +583,6 @@ window.F1_HIGHLIGHTS = [
         category: ["all", "classic"],
         thumbnail: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/fom-website/2026/races/china-gp.jpg",
         fallbackThumbnail: "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=800&q=80",
-        f1OfficialUrl: "https://www.formula1.com/en/results/2026/races/1252/china/race-result",
         summary: "A star was officially born in Shanghai as 19-year-old Kimi Antonelli claimed his first ever Formula 1 Grand Prix victory, becoming one of the youngest race winners in F1 history while holding off 4-time champion Max Verstappen.",
         keyMoments: [
             "Lap 1: Antonelli charges from P2 down the inside of Turn 1 to snatch the lead.",
@@ -633,8 +612,7 @@ window.F1_HIGHLIGHTS = [
         isLatest: false,
         category: ["all", "street"],
         thumbnail: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/fom-website/2026/races/australia-gp.jpg",
-        fallbackThumbnail: "https://images.unsplash.com/photo-1541348263662-e0c8de4259ba?auto=format&fit=crop&w=800&q=80",
-        f1OfficialUrl: "https://www.formula1.com/en/results/2026/races/1251/australia/race-result",
+        fallbackThumbnail: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80",
         summary: "The 2026 technical regulations roared into life at Albert Park with Mercedes unleashing sheer speed. George Russell converted pole into victory, leading rookie teammate Antonelli across the line for a dream 1-2 finish.",
         keyMoments: [
             "Lap 1: Clean start for Russell; Hamilton battles Leclerc into Turn 3 on Ferrari debut.",

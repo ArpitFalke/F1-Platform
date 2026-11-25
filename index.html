@@ -80,7 +80,7 @@
                 <div class="hero-content">
                     <div class="live-badge"><span class="live-dot"></span> 2026 WORLD CHAMPIONSHIP BATTLE</div>
                     <h1>Formula 1</h1>
-                    <p class="hero-subtitle">Official 2026 Season Race Hub — Live Streams, Circuit Maps, Championship Standings, Audi F1 Team & Real-time Fan Chat.</p>
+                    <p class="hero-subtitle">2026 Season Race Hub — Free Live Stream, Interactive Circuit Telemetry, Highlight Recaps, Audi Works Entry & Real-Time Friend Chat.</p>
                     <div class="hero-actions">
                         <button class="btn-primary btn-lg" onclick="navigateTo('live')"><i class="fas fa-play"></i> Watch Stream Free</button>
                         <button class="btn-outline btn-lg" onclick="navigateTo('circuits')"><i class="fas fa-route"></i> Explore Circuits</button>
@@ -88,19 +88,19 @@
                 </div>
                 <div class="hero-stats">
                     <div class="stat-card" onclick="navigateTo('schedule')">
-                        <div class="stat-number">24</div>
+                        <div class="stat-number">23</div>
                         <div class="stat-label">Grands Prix</div>
                     </div>
                     <div class="stat-card" onclick="navigateTo('circuits')">
-                        <div class="stat-number">24</div>
+                        <div class="stat-number">23</div>
                         <div class="stat-label">Circuit Maps</div>
                     </div>
                     <div class="stat-card" onclick="navigateTo('drivers')">
-                        <div class="stat-number">20</div>
+                        <div class="stat-number">25</div>
                         <div class="stat-label">Drivers</div>
                     </div>
                     <div class="stat-card" onclick="navigateTo('teams')">
-                        <div class="stat-number">10</div>
+                        <div class="stat-number">11</div>
                         <div class="stat-label">Constructors</div>
                     </div>
                 </div>
@@ -136,12 +136,12 @@
                             <div class="quick-card" onclick="navigateTo('standings')">
                                 <div class="quick-card-icon gold"><i class="fas fa-trophy"></i></div>
                                 <h3>Standings</h3>
-                                <p>Norris vs Verstappen title fight</p>
+                                <p>Antonelli vs Verstappen vs Hamilton</p>
                             </div>
                             <div class="quick-card" onclick="navigateTo('drivers')">
                                 <div class="quick-card-icon green"><i class="fas fa-flag-checkered"></i></div>
                                 <h3>Driver Grid</h3>
-                                <p>Driver profiles & official portraits</p>
+                                <p>25 drivers & season telemetry</p>
                             </div>
                         </div>
                     </div>
@@ -158,9 +158,9 @@
                         </div>
                         <div class="news-body">
                             <span class="news-tag">Championship</span>
-                            <h3>2026 World Championship: Norris vs Verstappen vs Ferrari Decider</h3>
-                            <p>With Lando Norris leading Max Verstappen and a resurgent Ferrari powered by Hamilton and Leclerc, the 2026 championship fight comes down to the wire in Lusail and Yas Marina.</p>
-                            <span class="news-date"><i class="far fa-clock"></i> Just now</span>
+                            <h3>2026 World Championship: Antonelli (402 pts) Leads Verstappen & Hamilton</h3>
+                            <p>With Kimi Antonelli dominating the standings for Mercedes ahead of Max Verstappen and Ferrari's Lewis Hamilton, the 2026 finale heats up in Qatar and Abu Dhabi.</p>
+                            <span class="news-date"><i class="far fa-clock"></i> Season Round 22</span>
                         </div>
                     </div>
                     <div class="news-card" onclick="navigateTo('teams')">
@@ -258,20 +258,46 @@
                         </div>
                     </div>
 
-                    <!-- Online Fan Chat -->
+                    <!-- Real-Time Friend Chat (Zero Bots) -->
                     <div class="live-info-card chat-card">
                         <div class="chat-header-bar">
-                            <h3><i class="fas fa-comments"></i> Pit Wall Fan Chat</h3>
-                            <div class="chat-online-badge">
-                                <span class="online-indicator-dot"></span>
-                                <span id="onlineCount">1,482</span> online
+                            <div class="chat-title-block">
+                                <h3><i class="fas fa-comments"></i> Paddock Friend Chat</h3>
+                                <span class="chat-room-pill" id="activeRoomLabel">#main-race</span>
+                            </div>
+                            <div class="chat-header-tools">
+                                <div class="chat-online-badge" title="Active open tabs/viewers in this browser">
+                                    <span class="online-indicator-dot"></span>
+                                    <span id="onlineCount">1</span> online
+                                </div>
+                                <button class="chat-tool-btn" onclick="ChatSystem.clearRoomChat()" title="Clear Room Messages">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
                             </div>
                         </div>
+                        <div class="chat-room-bar">
+                            <select id="chatRoomSelect" onchange="ChatSystem.switchRoom(this.value)" title="Switch chat room">
+                                <option value="main-race">#main-race (Public Paddock)</option>
+                                <option value="watch-party">#watch-party (Friends)</option>
+                                <option value="strategy-desk">#strategy-desk (Pit Wall)</option>
+                            </select>
+                            <button class="chat-invite-btn" onclick="ChatSystem.openFriendTabHelper()" title="Open another tab to chat as a friend">
+                                <i class="fas fa-user-friends"></i> +Tab
+                            </button>
+                        </div>
                         <div class="chat-box" id="chatBox">
-                            <!-- Populated and persisted by chat.js -->
+                            <!-- Real user messages rendered by chat.js -->
+                        </div>
+                        <div id="chatTypingIndicator" class="chat-typing-indicator" style="display:none;"></div>
+                        <div class="chat-quick-emojis">
+                            <button type="button" onclick="ChatSystem.insertEmoji('🔥')">🔥</button>
+                            <button type="button" onclick="ChatSystem.insertEmoji('🏎️')">🏎️</button>
+                            <button type="button" onclick="ChatSystem.insertEmoji('🏁')">🏁</button>
+                            <button type="button" onclick="ChatSystem.insertEmoji('👏')">👏</button>
+                            <button type="button" onclick="ChatSystem.insertEmoji('😱')">😱</button>
                         </div>
                         <div class="chat-input-area">
-                            <input type="text" placeholder="Send a message to live chat..." id="chatInput" maxlength="150">
+                            <input type="text" placeholder="Discuss live with friends..." id="chatInput" maxlength="200">
                             <button class="btn-primary btn-sm" onclick="sendChat()"><i class="fas fa-paper-plane"></i></button>
                         </div>
                     </div>
@@ -285,7 +311,7 @@
                 <div class="section-header">
                     <div>
                         <h2><i class="fas fa-play-circle"></i> 2026 Race Highlights Hub</h2>
-                        <p class="section-subtitle">Official Race Recaps, Video Highlights, Key Battles & DHL Fastest Laps for Every 2026 Grand Prix</p>
+                        <p class="section-subtitle">Race Recaps, Interactive Timeline Replays, Key Battles & Fastest Laps for Every 2026 Grand Prix</p>
                     </div>
                     <div class="tab-switcher" id="highlightsFilterTabs">
                         <button class="tab active" data-highlight-filter="all">All Races (21)</button>
@@ -318,13 +344,13 @@
             <div class="container">
                 <div class="section-header">
                     <div>
-                        <h2><i class="fas fa-calendar-alt"></i> 2026 FIA Formula One World Championship Calendar</h2>
-                        <p class="section-subtitle">24 Rounds • 6 Sprint Weekends • 2026 Regulation Era Track Layouts</p>
+                        <h2><i class="fas fa-calendar-alt"></i> 2026 World Championship Calendar</h2>
+                        <p class="section-subtitle">23 Rounds • Sprint Weekends • 2026 Track Layouts & Race Winners</p>
                     </div>
                     <div class="tab-switcher">
-                        <button class="tab active" data-filter="all">All (24)</button>
+                        <button class="tab active" data-filter="all">All (23)</button>
                         <button class="tab" data-filter="upcoming">Remaining (2)</button>
-                        <button class="tab" data-filter="completed">Completed (22)</button>
+                        <button class="tab" data-filter="completed">Completed (21)</button>
                     </div>
                 </div>
                 <div class="schedule-grid" id="scheduleGrid">
@@ -339,7 +365,7 @@
                 <div class="section-header">
                     <div>
                         <h2><i class="fas fa-route"></i> Formula 1 Circuit Maps & Telemetry</h2>
-                        <p class="section-subtitle">2026 Season Track Geometries, Elevation Profiles, Sector Breakdowns & Telemetry (Formula-Timer & F1.com)</p>
+                        <p class="section-subtitle">2026 Season Track Geometries, Elevation Profiles, Sector Breakdowns & Speed Traps</p>
                     </div>
                     <div class="tab-switcher" id="circuitFilterTabs">
                         <button class="tab active" data-circuit-filter="all">All (23)</button>
@@ -354,7 +380,7 @@
                     <input type="text" id="circuitFilterInput" placeholder="Filter circuits by name, country, city, turn count or track type..." oninput="handleCircuitSearch(this.value)">
                 </div>
                 <div class="circuits-grid" id="circuitsGrid">
-                    <!-- Populated by JS with official F1 Circuit maps & Formula-Timer telemetry -->
+                    <!-- Populated by JS with Circuit maps & telemetry -->
                 </div>
             </div>
         </section>
@@ -365,7 +391,7 @@
                 <div class="section-header">
                     <div>
                         <h2><i class="fas fa-trophy"></i> 2026 World Championship Standings</h2>
-                        <p class="section-subtitle">Official 2026 Driver & Constructor Championship Tables</p>
+                        <p class="section-subtitle">2026 Driver & Constructor Championship Tables</p>
                     </div>
                     <div class="tab-switcher">
                         <button class="tab active" data-standings="drivers"><i class="fas fa-user-astronaut"></i> Drivers</button>
@@ -374,7 +400,7 @@
                 </div>
 
                 <div id="driverStandings" class="standings-table">
-                    <!-- Populated by JS with official driver headshots & points bars -->
+                    <!-- Populated by JS with driver portraits & points bars -->
                 </div>
                 <div id="constructorStandings" class="standings-table" style="display:none;">
                     <!-- Populated by JS with constructor stats -->
@@ -388,11 +414,11 @@
                 <div class="section-header">
                     <div>
                         <h2><i class="fas fa-user-astronaut"></i> 2026 Formula 1 Driver Grid</h2>
-                        <p class="section-subtitle">Official Headshots, Race Numbers, Points, Wins & Podiums</p>
+                        <p class="section-subtitle">Driver Portraits, Race Numbers, Points, Wins & Podiums</p>
                     </div>
                 </div>
                 <div class="drivers-grid" id="driversGrid">
-                    <!-- Populated by JS with verified F1 headshots -->
+                    <!-- Populated by JS -->
                 </div>
             </div>
         </section>
@@ -466,7 +492,7 @@
             <div class="notif-item" onclick="navigateTo('circuits')">
                 <i class="fas fa-route notif-icon blue"></i>
                 <div>
-                    <p class="notif-text">All 24 Circuit Maps & Layouts updated from formula1.com</p>
+                    <p class="notif-text">All 23 Circuit Maps, Sectors & Telemetry Ready</p>
                     <span class="notif-time">Explore tracks</span>
                 </div>
             </div>
@@ -481,12 +507,22 @@
                     <div class="footer-logo">
                         <span class="logo-f1">F1</span><span class="logo-stream">STREAM</span>
                     </div>
-                    <p>High-octane Formula 1 streaming and live race telemetry platform. Designed for motorsport enthusiasts worldwide.</p>
-                    <div class="social-links">
-                        <a href="https://twitter.com/f1" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
-                        <a href="https://instagram.com/f1" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
-                        <a href="https://youtube.com/f1" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>
-                        <a href="https://reddit.com/r/formula1" target="_blank" rel="noopener"><i class="fab fa-reddit"></i></a>
+                    <p>High-octane Formula 1 streaming, live telemetry, and real-time friend race chat platform. Built for motorsport fans.</p>
+                    <!-- Creator GitHub Profile Card -->
+                    <div class="creator-card">
+                        <div class="creator-avatar"><i class="fab fa-github"></i></div>
+                        <div class="creator-info">
+                            <span class="creator-role">Created & Engineered by</span>
+                            <strong class="creator-name">ArpitFalke</strong>
+                        </div>
+                        <div class="creator-links">
+                            <a href="https://github.com/ArpitFalke" target="_blank" rel="noopener" class="creator-gh-btn" title="Visit ArpitFalke on GitHub">
+                                <i class="fab fa-github"></i> GitHub Profile
+                            </a>
+                            <a href="https://github.com/ArpitFalke/F1-Platform" target="_blank" rel="noopener" class="creator-repo-btn" title="Source Repository">
+                                <i class="fas fa-code-branch"></i> Repo
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div class="footer-col">
@@ -505,15 +541,15 @@
                     <a href="#" onclick="openAuthModal('login'); return false;">Sign In</a>
                 </div>
                 <div class="footer-col">
-                    <h4>Platform Information</h4>
-                    <a href="#">Streaming Quality Guide</a>
-                    <a href="#">Privacy & Cookies Policy</a>
-                    <a href="#">Terms of Broadcast</a>
-                    <a href="#">Unofficial Fan Project</a>
+                    <h4>Legal & Privacy</h4>
+                    <a href="#" onclick="openLegalModal('terms'); return false;"><i class="fas fa-file-contract"></i> Terms & Conditions</a>
+                    <a href="#" onclick="openLegalModal('privacy'); return false;"><i class="fas fa-user-shield"></i> Privacy Policy</a>
+                    <a href="#" onclick="openLegalModal('cookies'); return false;"><i class="fas fa-cookie-bite"></i> Cookie Policy & Settings</a>
+                    <a href="#" onclick="CookieManager.showCookieBanner(); return false;"><i class="fas fa-sliders"></i> Manage Cookie Popup</a>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>© 2025–2026 F1 STREAM. Formula 1, F1, FORMULA ONE and related marks are trademarks of Formula One Licensing B.V.</p>
+                <p>© 2025–2026 F1 STREAM • Created by <a href="https://github.com/ArpitFalke" target="_blank" rel="noopener" style="color:var(--accent-red);font-weight:700;text-decoration:none;">ArpitFalke</a> • Independent Fan Streaming & Telemetry Platform.</p>
             </div>
         </div>
     </footer>
@@ -528,8 +564,11 @@
     <!-- Authentication & Fan Club -->
     <script src="auth.js"></script>
 
-    <!-- Live Paddock Chat -->
+    <!-- Real-Time Friend Chat -->
     <script src="chat.js"></script>
+
+    <!-- Legal Documents & 10s Cookie Consent System -->
+    <script src="legal.js"></script>
 
     <!-- Core App Logic & Orchestration -->
     <script src="app.js"></script>

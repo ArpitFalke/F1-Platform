@@ -1,7 +1,7 @@
 // ==========================================
 // F1 STREAM — Core Application Logic
-// Real 2026 Season Data from Formula1.com
-// Clean & Modular Architecture
+// 2026 Season Race Hub & Live Telemetry
+// Created by ArpitFalke (https://github.com/ArpitFalke)
 // ==========================================
 
 // Connect to Modular Data Stores
@@ -57,13 +57,32 @@ window.addEventListener('load', () => {
     renderConstructorStandings();
     renderDrivers();
     renderTeams();
+    triggerPageAnimations('home');
 });
+
+// ===== SMOOTH PAGE & CARD ANIMATIONS =====
+function triggerPageAnimations(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+
+    const animSelectors = '.stat-card, .battle-driver-box, .quick-card, .news-card, .highlight-card, .race-card, .circuit-card, .standings-row:not(.header), .driver-card, .team-card, .live-info-card';
+    const items = section.querySelectorAll(animSelectors);
+    items.forEach((el, idx) => {
+        el.classList.remove('reveal-animate');
+        void el.offsetWidth; // trigger reflow for smooth replay
+        el.style.animationDelay = `${Math.min(idx * 45, 450)}ms`;
+        el.classList.add('reveal-animate');
+    });
+}
 
 // ===== NAVIGATION =====
 function navigateTo(sectionId) {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     const target = document.getElementById(sectionId);
-    if (target) target.classList.add('active');
+    if (target) {
+        target.classList.add('active');
+        triggerPageAnimations(sectionId);
+    }
 
     document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(l => {
         l.classList.toggle('active', l.dataset.section === sectionId);
@@ -196,7 +215,7 @@ function renderChampionshipBattle() {
                 }).join('')}
             </div>
             <div class="battle-footer-bar">
-                <span><i class="fas fa-info-circle"></i> Standings verified from <strong>Formula1.com 2026 Results</strong>. Antonelli leads with 402 points.</span>
+                <span><i class="fas fa-info-circle"></i> 2026 World Championship Standings • Kimi Antonelli leads with 402 points.</span>
                 <button class="btn-sm btn-outline" onclick="navigateTo('standings')">View Full 25-Driver Table <i class="fas fa-arrow-right"></i></button>
             </div>
         </div>
@@ -364,33 +383,52 @@ document.querySelectorAll('#highlightsFilterTabs [data-highlight-filter]').forEa
     });
 });
 
-// ===== HIGHLIGHT VIDEO MODAL =====
+// ===== HIGHLIGHT VIDEO & INTERACTIVE REPLAY MODAL =====
+let highlightPlaybackTimer = null;
+
 function openHighlightModal(highlightId) {
     const item = highlightsData.find(h => h.id === highlightId) || highlightsData[0];
     if (!item) return;
+
+    if (highlightPlaybackTimer) {
+        clearInterval(highlightPlaybackTimer);
+        highlightPlaybackTimer = null;
+    }
 
     const modal = document.getElementById('highlightModal');
     const content = document.getElementById('highlightModalContent');
     if (!modal || !content) return;
 
+    const matchedCircuit = circuitsData.find(c =>
+        c.round === item.round ||
+        c.gpName.toLowerCase() === item.gpName.toLowerCase()
+    );
+    const circuitIdArg = matchedCircuit ? matchedCircuit.id : 'australia';
+
     content.innerHTML = `
         <div class="highlight-modal-header">
-            <div class="highlight-modal-badge">${item.flag} ROUND ${item.round} • 2026 OFFICIAL HIGHLIGHTS</div>
+            <div class="highlight-modal-badge">${item.flag} ROUND ${item.round} • 2026 RACE HIGHLIGHTS</div>
             <h2>${item.gpName}</h2>
             <p class="highlight-modal-subtitle">${item.title} • ${item.circuit}, ${item.country} • ${item.date}</p>
         </div>
         <div class="highlight-modal-body">
-            <!-- Video Player Area -->
+            <!-- Interactive Recap Player Area -->
             <div class="highlight-player-box">
                 <div class="highlight-video-placeholder">
                     <img src="${item.fallbackThumbnail || item.thumbnail}" alt="${item.gpName}" class="highlight-player-bg" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=1200&q=80';">
-                    <div class="highlight-player-hud">
-                        <div class="highlight-hud-badge"><span class="live-dot"></span> FORMULA 1 OFFICIAL RACE RECAP</div>
-                        <a href="${item.f1OfficialUrl || 'https://www.formula1.com/en/results/2026/races'}" target="_blank" rel="noopener" class="highlight-launch-play-btn">
+                    <div class="highlight-player-hud" id="highlightHudOverlay">
+                        <div class="highlight-hud-badge"><span class="live-dot"></span> 2026 GRAND PRIX RECAP PLAYER</div>
+                        <div class="highlight-live-moment-caption" id="highlightMomentCaption">
+                            <i class="fas fa-flag-checkered"></i> Ready to replay ${(item.keyMoments || []).length} decisive race moments
+                        </div>
+                        <button type="button" class="highlight-launch-play-btn" id="highlightPlayToggleBtn" onclick="startHighlightRecapReplay('${item.id}')">
                             <i class="fas fa-play"></i>
-                            <span>Watch Full Highlight on Formula1.com</span>
-                        </a>
-                        <div class="highlight-hud-duration">Duration: ${item.duration} • 1080p 60fps Broadcast</div>
+                            <span>Play Interactive Lap Recap</span>
+                        </button>
+                        <div class="highlight-replay-progress-wrap" id="highlightReplayProgressWrap" style="display:none;">
+                            <div class="highlight-replay-progress-bar" id="highlightReplayProgressBar"></div>
+                        </div>
+                        <div class="highlight-hud-duration">Recap Duration: ${item.duration} • Winner: ${item.winner} (${item.winnerTeam})</div>
                     </div>
                 </div>
             </div>
@@ -403,9 +441,9 @@ function openHighlightModal(highlightId) {
                     <p class="highlight-full-summary">${item.summary}</p>
 
                     <h4 style="margin-top:1.5rem;"><i class="fas fa-stopwatch"></i> Critical Lap-by-Lap Moments</h4>
-                    <div class="key-moments-timeline">
-                        ${(item.keyMoments || []).map(moment => `
-                            <div class="timeline-item">
+                    <div class="key-moments-timeline" id="highlightTimelineList">
+                        ${(item.keyMoments || []).map((moment, idx) => `
+                            <div class="timeline-item" id="timelineStep-${idx}" onclick="jumpToHighlightMoment('${item.id}', ${idx})">
                                 <i class="fas fa-circle-dot timeline-dot"></i>
                                 <span class="timeline-text">${moment}</span>
                             </div>
@@ -424,7 +462,7 @@ function openHighlightModal(highlightId) {
                     </div>
 
                     <div class="highlight-stat-card">
-                        <span class="highlight-stat-lbl">Official Podium</span>
+                        <span class="highlight-stat-lbl">Race Podium</span>
                         <div class="highlight-podium-list">
                             ${(item.podium || []).map(p => `
                                 <div class="podium-item"><i class="fas fa-medal"></i> ${p}</div>
@@ -433,16 +471,16 @@ function openHighlightModal(highlightId) {
                     </div>
 
                     <div class="highlight-stat-card fastest-lap-card">
-                        <span class="highlight-stat-lbl"><i class="fas fa-bolt" style="color:var(--accent-red);"></i> DHL Fastest Lap</span>
+                        <span class="highlight-stat-lbl"><i class="fas fa-bolt" style="color:var(--accent-red);"></i> Fastest Lap</span>
                         <div class="fastest-lap-val">${item.fastestLap || 'N/A'}</div>
                     </div>
 
                     <div class="highlight-modal-actions">
-                        <a href="${item.f1OfficialUrl || 'https://www.formula1.com/en/results/2026/races'}" target="_blank" rel="noopener" class="btn-primary btn-block">
-                            <i class="fas fa-external-link-alt"></i> Official Classification on F1.com
-                        </a>
-                        <button class="btn-outline btn-block" onclick="navigateTo('live'); closeHighlightModal();">
-                            <i class="fas fa-broadcast-tower"></i> Switch to Live Video Stream
+                        <button type="button" class="btn-primary btn-block" onclick="closeHighlightModal(); openCircuitModal('${circuitIdArg}');">
+                            <i class="fas fa-route"></i> Explore Circuit Map & Sectors
+                        </button>
+                        <button type="button" class="btn-outline btn-block" onclick="navigateTo('live'); closeHighlightModal();">
+                            <i class="fas fa-broadcast-tower"></i> Switch to Live Stream Feed
                         </button>
                     </div>
                 </div>
@@ -454,7 +492,58 @@ function openHighlightModal(highlightId) {
     document.body.style.overflow = 'hidden';
 }
 
+function jumpToHighlightMoment(highlightId, index) {
+    const item = highlightsData.find(h => h.id === highlightId);
+    if (!item || !item.keyMoments || !item.keyMoments[index]) return;
+
+    const caption = document.getElementById('highlightMomentCaption');
+    const barWrap = document.getElementById('highlightReplayProgressWrap');
+    const bar = document.getElementById('highlightReplayProgressBar');
+    if (caption) {
+        caption.innerHTML = `<span class="moment-active-pill">MOMENT ${index + 1}/${item.keyMoments.length}</span> ${item.keyMoments[index]}`;
+    }
+    if (barWrap && bar) {
+        barWrap.style.display = 'block';
+        bar.style.width = `${((index + 1) / item.keyMoments.length) * 100}%`;
+    }
+    document.querySelectorAll('#highlightTimelineList .timeline-item').forEach((el, i) => {
+        el.classList.toggle('active-moment', i === index);
+    });
+}
+
+function startHighlightRecapReplay(highlightId) {
+    const item = highlightsData.find(h => h.id === highlightId);
+    if (!item || !item.keyMoments || item.keyMoments.length === 0) return;
+
+    const btn = document.getElementById('highlightPlayToggleBtn');
+    if (highlightPlaybackTimer) {
+        clearInterval(highlightPlaybackTimer);
+        highlightPlaybackTimer = null;
+        if (btn) btn.innerHTML = `<i class="fas fa-play"></i><span>Resume Interactive Recap</span>`;
+        return;
+    }
+
+    let step = 0;
+    jumpToHighlightMoment(highlightId, step);
+    if (btn) btn.innerHTML = `<i class="fas fa-pause"></i><span>Pause Recap Playback</span>`;
+
+    highlightPlaybackTimer = setInterval(() => {
+        step++;
+        if (step >= item.keyMoments.length) {
+            clearInterval(highlightPlaybackTimer);
+            highlightPlaybackTimer = null;
+            if (btn) btn.innerHTML = `<i class="fas fa-redo"></i><span>Replay Race Highlights</span>`;
+            return;
+        }
+        jumpToHighlightMoment(highlightId, step);
+    }, 3200);
+}
+
 function closeHighlightModal() {
+    if (highlightPlaybackTimer) {
+        clearInterval(highlightPlaybackTimer);
+        highlightPlaybackTimer = null;
+    }
     document.getElementById('highlightModal')?.classList.remove('active');
     document.body.style.overflow = '';
 }
@@ -518,7 +607,7 @@ function renderCircuits(filter = 'all', query = '') {
                 <div class="circuit-gp-name">${c.gpName}</div>
                 <div class="circuit-location"><i class="fas fa-map-marker-alt"></i> ${c.city}, ${c.country}</div>
                 
-                <!-- Telemetry Quick Tags (Formula-Timer Data) -->
+                <!-- Telemetry Quick Tags -->
                 <div class="circuit-telemetry-pills">
                     ${c.fullThrottle ? `<span class="circuit-pill"><i class="fas fa-bolt"></i> ${c.fullThrottle} Throttle</span>` : ''}
                     ${c.topSpeed ? `<span class="circuit-pill"><i class="fas fa-tachometer-alt"></i> ${c.topSpeed}</span>` : ''}
@@ -578,7 +667,7 @@ function openCircuitModal(circuitId, activeTab = 'overview') {
                     <i class="fas fa-map"></i> Overview & Layout
                 </button>
                 <button class="c-tab-btn ${activeTab === 'telemetry' ? 'active' : ''}" onclick="switchCircuitModalTab('${c.id}', 'telemetry')">
-                    <i class="fas fa-gauge-high"></i> Telemetry & Specs (Formula-Timer)
+                    <i class="fas fa-gauge-high"></i> Telemetry & Specs
                 </button>
                 <button class="c-tab-btn ${activeTab === 'sectors' ? 'active' : ''}" onclick="switchCircuitModalTab('${c.id}', 'sectors')">
                     <i class="fas fa-layer-group"></i> Sector Analysis & Overtaking
@@ -590,18 +679,15 @@ function openCircuitModal(circuitId, activeTab = 'overview') {
             ${activeTab === 'telemetry' ? renderCircuitTelemetryTab(c) : ''}
             ${activeTab === 'sectors' ? renderCircuitSectorsTab(c) : ''}
 
-            <!-- Sources & Action Footer -->
+            <!-- Action Footer -->
             <div class="circuit-modal-footer-bar">
                 <div class="circuit-sources-tag">
-                    <i class="fas fa-check-circle"></i> Telemetry & Layout cross-referenced with <strong>Formula-Timer.com/circuit</strong> & <strong>Formula1.com</strong>
+                    <i class="fas fa-check-circle"></i> 2026 Circuit Map • Telemetry & Sector Analysis
                 </div>
                 <div class="circuit-actions-row">
-                    <a href="https://formula-timer.com/circuit" target="_blank" rel="noopener" class="btn-primary btn-sm">
-                        <i class="fas fa-external-link-alt"></i> Formula-Timer Guide
-                    </a>
-                    <a href="https://www.formula1.com/en/racing/2026/${encodeURIComponent(c.gpName.replace(' Grand Prix',''))}/Circuit.html" target="_blank" rel="noopener" class="btn-outline btn-sm">
-                        <i class="fas fa-external-link-alt"></i> Formula1.com
-                    </a>
+                    <button class="btn-primary btn-sm" onclick="navigateTo('highlights'); closeCircuitModal();">
+                        <i class="fas fa-play-circle"></i> Race Highlights
+                    </button>
                     <button class="btn-outline btn-sm" onclick="navigateTo('schedule'); closeCircuitModal();">
                         <i class="fas fa-calendar"></i> 2026 Calendar
                     </button>
@@ -826,6 +912,7 @@ document.querySelectorAll('[data-filter]').forEach(tab => {
         document.querySelectorAll('[data-filter]').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
         renderSchedule(tab.dataset.filter);
+        triggerPageAnimations('schedule');
     });
 });
 
@@ -902,6 +989,7 @@ document.querySelectorAll('[data-standings]').forEach(tab => {
         const isDrivers = tab.dataset.standings === 'drivers';
         document.getElementById('driverStandings').style.display = isDrivers ? 'block' : 'none';
         document.getElementById('constructorStandings').style.display = isDrivers ? 'none' : 'block';
+        triggerPageAnimations('standings');
     });
 });
 
@@ -1025,15 +1113,6 @@ document.getElementById('chatInput')?.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') sendChat();
 });
 
-// Simulate online members fluctuating slightly
-setInterval(() => {
-    const countEl = document.getElementById('onlineCount');
-    if (!countEl) return;
-    const base = 1520;
-    const jitter = Math.floor(Math.random() * 30) - 15;
-    countEl.textContent = (base + jitter).toLocaleString();
-}, 6000);
-
 // ===== LIVE TIMING OSCILLATION =====
 function updateTiming() {
     const rows = document.querySelectorAll('.timing-row:not(.header)');
@@ -1069,6 +1148,7 @@ document.addEventListener('keydown', (e) => {
             closeCircuitModal();
             closeHighlightModal();
             if (typeof closeAuthModal === 'function') closeAuthModal();
+            if (typeof closeLegalModal === 'function') closeLegalModal();
             break;
     }
 });

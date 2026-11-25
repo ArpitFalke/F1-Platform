@@ -1,8 +1,6 @@
 // ==========================================
 // F1 STREAM — 2026 Races & Schedule Database
-// Official Data from Formula1.com
-// https://www.formula1.com/en/results/2026/races
-// https://www.formula1.com/en/racing/2026
+// Created by ArpitFalke (https://github.com/ArpitFalke)
 // ==========================================
 
 window.F1_RACES = [
