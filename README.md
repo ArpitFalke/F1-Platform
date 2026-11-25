@@ -51,12 +51,20 @@ Verified directly from Formula 1's official results databases:
   - **P10: Aston Martin** — 7 pts
   - **P11: Cadillac Formula 1 Team** — 0 pts (Historic 11th team entry with Valtteri Bottas & Sergio Perez)
 
-### 3. 🗺️ Official 2026 Circuit Maps & Track Telemetry
-- All 24 circuit layout maps rendered directly from Formula 1's Cloudinary CDN:
-  ```
-  https://media.formula1.com/image/upload/c_fit,h_704/q_auto/v1740000001/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/{slug}_Circuit.webp
-  ```
-- **Track Telemetry Modal**: Circuit length, race distance, total laps, number of turns, DRS detection zones, official all-time lap records, and circuit characteristics.
+### 3. 🗺️ Official 2026 Circuit Maps & Telemetry (Formula-Timer & F1.com)
+- Track maps and technical geometry for all 2026 circuits, cross-referenced with **[Formula-Timer.com/circuit](https://formula-timer.com/circuit)** and **Formula1.com**.
+- **Interactive Multi-Tab Circuit Modal**:
+  - **Tab 1: Overview & Layout Map**: High-res Cloudinary F1 CDN map, track length, race distance, laps, turns, DRS zones, lap record, and track description.
+  - **Tab 2: Telemetry & Specs (Formula-Timer)**:
+    - **Full Throttle Percentage**: Visual bar (e.g. 80% at Monza, 78% at Las Vegas, 70% at Spa, 34% at Monaco).
+    - **Elevation Profile**: Track elevation change (e.g. 102.2m at Spa, 65m at Red Bull Ring, 41m at COTA, 40m at Interlagos).
+    - **Top Speed Trap**: Radar telemetry trap records (e.g. 356 km/h at Monza, 354 km/h at Baku, 352 km/h at Las Vegas).
+    - **Downforce Package Level**: Minimum, Low, Medium, High, or Maximum.
+    - **Tire Stress & Degradation**: Energy load on Pirelli compounds (Low to Extreme).
+    - **Gear Shifts Per Lap**: Shift demands (e.g. 80 shifts at Singapore, 36 at Monza).
+    - **Braking Load & Primary Overtaking Zones**.
+  - **Tab 3: Sector Analysis & Overtakes**: Granular breakdown of **Sector 1**, **Sector 2**, and **Sector 3** detailing apexes, kerb behavior, and DRS attack zones.
+- **Circuit Category Filters**: All (23), Street Tracks (7), Permanent Tracks (16), High Speed Power, and High Downforce.
 
 ### 4. 📅 2026 Race Calendar & Live Countdown
 - Detailed schedule of all 24 rounds.
@@ -99,7 +107,8 @@ f1-stream/
 
 ## 🌐 Official Verification Sources Checked
 
-All statistics, winners, fastest laps, and points have been cross-referenced and verified against the official Formula 1 website:
+All statistics, winners, fastest laps, circuit telemetry, and points have been cross-referenced and verified against:
+- **Circuit Telemetry & Guides:** [formula-timer.com/circuit](https://formula-timer.com/circuit)
 - **Drivers Championship:** [formula1.com/en/results/2026/drivers](https://www.formula1.com/en/results/2026/drivers)
 - **Constructors Championship:** [formula1.com/en/results/2026/team](https://www.formula1.com/en/results/2026/team)
 - **Race Results:** [formula1.com/en/results/2026/races](https://www.formula1.com/en/results/2026/races)

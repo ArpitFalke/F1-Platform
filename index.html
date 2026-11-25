@@ -333,21 +333,28 @@
             </div>
         </section>
 
-        <!-- ===== CIRCUITS SECTION (NEW) ===== -->
+        <!-- ===== CIRCUITS SECTION ===== -->
         <section id="circuits" class="section">
             <div class="container">
                 <div class="section-header">
                     <div>
-                        <h2><i class="fas fa-route"></i> Formula 1 Circuit Maps & Layouts</h2>
-                        <p class="section-subtitle">Official F1 Track Maps, Sector Analysis, Lengths, Turn Numbers & DRS Zones</p>
+                        <h2><i class="fas fa-route"></i> Formula 1 Circuit Maps & Telemetry</h2>
+                        <p class="section-subtitle">2026 Season Track Geometries, Elevation Profiles, Sector Breakdowns & Telemetry (Formula-Timer & F1.com)</p>
                     </div>
-                    <div class="circuit-search-bar">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="circuitFilterInput" placeholder="Filter circuits by name, country or type..." oninput="filterCircuits(this.value)">
+                    <div class="tab-switcher" id="circuitFilterTabs">
+                        <button class="tab active" data-circuit-filter="all">All (23)</button>
+                        <button class="tab" data-circuit-filter="street">Street Tracks</button>
+                        <button class="tab" data-circuit-filter="permanent">Permanent Tracks</button>
+                        <button class="tab" data-circuit-filter="high-speed">High Speed</button>
+                        <button class="tab" data-circuit-filter="high-downforce">High Downforce</button>
                     </div>
                 </div>
+                <div class="circuit-search-bar" style="margin-bottom: 2rem;">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="circuitFilterInput" placeholder="Filter circuits by name, country, city, turn count or track type..." oninput="handleCircuitSearch(this.value)">
+                </div>
                 <div class="circuits-grid" id="circuitsGrid">
-                    <!-- Populated by JS with official F1 Circuit maps -->
+                    <!-- Populated by JS with official F1 Circuit maps & Formula-Timer telemetry -->
                 </div>
             </div>
         </section>

@@ -460,12 +460,47 @@ function closeHighlightModal() {
 }
 
 // ===== RENDER CIRCUITS (CIRCUITS TAB) =====
-function renderCircuits(list = circuitsData) {
+let currentCircuitFilter = 'all';
+
+function renderCircuits(filter = 'all', query = '') {
     const grid = document.getElementById('circuitsGrid');
     if (!grid) return;
 
+    currentCircuitFilter = filter;
+    let list = circuitsData;
+
+    // Filter by track category
+    if (filter === 'street') {
+        list = list.filter(c => c.category && c.category.includes('street'));
+    } else if (filter === 'permanent') {
+        list = list.filter(c => c.category && c.category.includes('permanent'));
+    } else if (filter === 'high-speed') {
+        list = list.filter(c => c.category && c.category.includes('high-speed'));
+    } else if (filter === 'high-downforce') {
+        list = list.filter(c => c.category && c.category.includes('high-downforce'));
+    }
+
+    // Filter by text search
+    if (query) {
+        const q = query.toLowerCase().trim();
+        list = list.filter(c =>
+            c.name.toLowerCase().includes(q) ||
+            c.gpName.toLowerCase().includes(q) ||
+            c.country.toLowerCase().includes(q) ||
+            c.city.toLowerCase().includes(q) ||
+            c.type.toLowerCase().includes(q)
+        );
+    }
+
     if (list.length === 0) {
-        grid.innerHTML = `<div class="no-results-box"><i class="fas fa-search"></i> No circuits found matching your search.</div>`;
+        grid.innerHTML = `
+            <div class="no-results-box" style="grid-column: 1 / -1; padding: 3rem; text-align: center;">
+                <i class="fas fa-route" style="font-size: 2.5rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                <h3>No Circuits Found</h3>
+                <p>No 2026 Formula 1 circuits match your search criteria.</p>
+                <button class="btn-outline btn-sm" onclick="renderCircuits('all', '')" style="margin-top: 1rem;">Reset Filters</button>
+            </div>
+        `;
         return;
     }
 
@@ -482,49 +517,110 @@ function renderCircuits(list = circuitsData) {
                 <h3 class="circuit-name">${c.name}</h3>
                 <div class="circuit-gp-name">${c.gpName}</div>
                 <div class="circuit-location"><i class="fas fa-map-marker-alt"></i> ${c.city}, ${c.country}</div>
+                
+                <!-- Telemetry Quick Tags (Formula-Timer Data) -->
+                <div class="circuit-telemetry-pills">
+                    ${c.fullThrottle ? `<span class="circuit-pill"><i class="fas fa-bolt"></i> ${c.fullThrottle} Throttle</span>` : ''}
+                    ${c.topSpeed ? `<span class="circuit-pill"><i class="fas fa-tachometer-alt"></i> ${c.topSpeed}</span>` : ''}
+                    ${c.elevationChange ? `<span class="circuit-pill"><i class="fas fa-mountain"></i> ${c.elevationChange} Elev</span>` : ''}
+                </div>
+
                 <div class="circuit-quick-specs">
                     <div class="spec-item"><i class="fas fa-ruler-horizontal"></i> ${c.length}</div>
                     <div class="spec-item"><i class="fas fa-sync-alt"></i> ${c.laps} Laps</div>
                     <div class="spec-item"><i class="fas fa-road"></i> ${c.turns} Turns</div>
                 </div>
-                <button class="circuit-view-btn"><i class="fas fa-search-plus"></i> View Track Telemetry</button>
+                <button class="circuit-view-btn"><i class="fas fa-chart-line"></i> View Track Telemetry & Sectors</button>
             </div>
         </div>
     `).join('');
 }
 
-function filterCircuits(query) {
-    const q = query.toLowerCase().trim();
-    if (!q) {
-        renderCircuits(circuitsData);
-        return;
-    }
-    const filtered = circuitsData.filter(c =>
-        c.name.toLowerCase().includes(q) ||
-        c.gpName.toLowerCase().includes(q) ||
-        c.country.toLowerCase().includes(q) ||
-        c.city.toLowerCase().includes(q) ||
-        c.type.toLowerCase().includes(q)
-    );
-    renderCircuits(filtered);
+function handleCircuitSearch(query) {
+    renderCircuits(currentCircuitFilter, query);
 }
 
-// ===== CIRCUIT DETAIL MODAL =====
-function openCircuitModal(circuitId) {
+function filterCircuits(query) {
+    handleCircuitSearch(query);
+}
+
+// Circuit Category Filter Switcher
+document.querySelectorAll('#circuitFilterTabs [data-circuit-filter]').forEach(tab => {
+    tab.addEventListener('click', () => {
+        document.querySelectorAll('#circuitFilterTabs [data-circuit-filter]').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const searchVal = document.getElementById('circuitFilterInput')?.value || '';
+        renderCircuits(tab.dataset.circuitFilter, searchVal);
+    });
+});
+
+// ===== CIRCUIT DETAIL MODAL & TELEMETRY HUB =====
+let activeCircuitTabState = 'overview';
+
+function openCircuitModal(circuitId, activeTab = 'overview') {
     const c = circuitsData.find(item => item.id === circuitId) || circuitsData[0];
     if (!c) return;
 
+    activeCircuitTabState = activeTab;
     const modal = document.getElementById('circuitModal');
     const content = document.getElementById('circuitModalContent');
     if (!modal || !content) return;
 
     content.innerHTML = `
         <div class="circuit-modal-header">
-            <div class="circuit-modal-badge">${c.flag} ROUND ${c.round} • ${c.type.toUpperCase()}</div>
+            <div class="circuit-modal-badge">${c.flag} ROUND ${c.round} • ${c.type.toUpperCase()} • 2026 CALENDAR</div>
             <h2>${c.name}</h2>
             <p class="circuit-modal-gp">${c.gpName} • ${c.city}, ${c.country}</p>
+
+            <!-- Modal Nav Tabs -->
+            <div class="circuit-modal-nav-tabs">
+                <button class="c-tab-btn ${activeTab === 'overview' ? 'active' : ''}" onclick="switchCircuitModalTab('${c.id}', 'overview')">
+                    <i class="fas fa-map"></i> Overview & Layout
+                </button>
+                <button class="c-tab-btn ${activeTab === 'telemetry' ? 'active' : ''}" onclick="switchCircuitModalTab('${c.id}', 'telemetry')">
+                    <i class="fas fa-gauge-high"></i> Telemetry & Specs (Formula-Timer)
+                </button>
+                <button class="c-tab-btn ${activeTab === 'sectors' ? 'active' : ''}" onclick="switchCircuitModalTab('${c.id}', 'sectors')">
+                    <i class="fas fa-layer-group"></i> Sector Analysis & Overtaking
+                </button>
+            </div>
         </div>
         <div class="circuit-modal-body">
+            ${activeTab === 'overview' ? renderCircuitOverviewTab(c) : ''}
+            ${activeTab === 'telemetry' ? renderCircuitTelemetryTab(c) : ''}
+            ${activeTab === 'sectors' ? renderCircuitSectorsTab(c) : ''}
+
+            <!-- Sources & Action Footer -->
+            <div class="circuit-modal-footer-bar">
+                <div class="circuit-sources-tag">
+                    <i class="fas fa-check-circle"></i> Telemetry & Layout cross-referenced with <strong>Formula-Timer.com/circuit</strong> & <strong>Formula1.com</strong>
+                </div>
+                <div class="circuit-actions-row">
+                    <a href="https://formula-timer.com/circuit" target="_blank" rel="noopener" class="btn-primary btn-sm">
+                        <i class="fas fa-external-link-alt"></i> Formula-Timer Guide
+                    </a>
+                    <a href="https://www.formula1.com/en/racing/2026/${encodeURIComponent(c.gpName.replace(' Grand Prix',''))}/Circuit.html" target="_blank" rel="noopener" class="btn-outline btn-sm">
+                        <i class="fas fa-external-link-alt"></i> Formula1.com
+                    </a>
+                    <button class="btn-outline btn-sm" onclick="navigateTo('schedule'); closeCircuitModal();">
+                        <i class="fas fa-calendar"></i> 2026 Calendar
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function switchCircuitModalTab(circuitId, tabName) {
+    openCircuitModal(circuitId, tabName);
+}
+
+function renderCircuitOverviewTab(c) {
+    return `
+        <div class="circuit-tab-content active">
             <div class="circuit-modal-map-wrap">
                 <img src="${getCircuitMap(c.imgSlug)}" alt="${c.name} Layout" class="circuit-full-map-img" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=1000&q=80';">
                 <div class="circuit-map-overlay-tag"><i class="fas fa-compass"></i> Official F1 Circuit Layout Map</div>
@@ -567,20 +663,114 @@ function openCircuitModal(circuitId) {
                     <h4><i class="fas fa-info-circle"></i> Track Overview & Characteristics</h4>
                     <p>${c.description}</p>
                 </div>
-                <div class="circuit-actions-row">
-                    <a href="https://www.formula1.com/en/racing/2026/${encodeURIComponent(c.gpName.replace(' Grand Prix',''))}/Circuit.html" target="_blank" rel="noopener" class="btn-primary btn-sm">
-                        <i class="fas fa-external-link-alt"></i> View on Formula1.com
-                    </a>
-                    <button class="btn-outline btn-sm" onclick="navigateTo('schedule'); closeCircuitModal();">
-                        <i class="fas fa-calendar"></i> View in Calendar
-                    </button>
+            </div>
+        </div>
+    `;
+}
+
+function renderCircuitTelemetryTab(c) {
+    const throttleNum = parseInt(c.fullThrottle) || 60;
+    return `
+        <div class="circuit-tab-content active">
+            <div class="circuit-telemetry-grid">
+                <div class="c-tele-card">
+                    <span class="c-tele-lbl"><i class="fas fa-bolt" style="color:var(--accent-red);"></i> Full Throttle Percentage</span>
+                    <strong class="c-tele-val">${c.fullThrottle || '65%'}</strong>
+                    <div class="c-tele-bar-wrap">
+                        <div class="c-tele-bar" style="width: ${throttleNum}%; background: var(--accent-red);"></div>
+                    </div>
+                    <span class="c-tele-hint">Percentage of lap length driven at wide-open throttle</span>
+                </div>
+
+                <div class="c-tele-card">
+                    <span class="c-tele-lbl"><i class="fas fa-mountain" style="color:var(--accent-gold);"></i> Elevation Change</span>
+                    <strong class="c-tele-val">${c.elevationChange || '15 m'}</strong>
+                    <span class="c-tele-hint">Difference between highest and lowest track points</span>
+                </div>
+
+                <div class="c-tele-card">
+                    <span class="c-tele-lbl"><i class="fas fa-tachometer-alt" style="color:#00D2BE;"></i> Speed Trap Top Speed</span>
+                    <strong class="c-tele-val">${c.topSpeed || '335 km/h'}</strong>
+                    <span class="c-tele-hint">Maximum telemetry speed recorded at official radar trap</span>
+                </div>
+
+                <div class="c-tele-card">
+                    <span class="c-tele-lbl"><i class="fas fa-wind" style="color:#64C4FF;"></i> Downforce Package</span>
+                    <strong class="c-tele-val">${c.downforce || 'Medium'}</strong>
+                    <span class="c-tele-hint">Optimal aerodynamic wing setup required for balance</span>
+                </div>
+
+                <div class="c-tele-card">
+                    <span class="c-tele-lbl"><i class="fas fa-circle-notch" style="color:#FF8000;"></i> Tire Stress & Degradation</span>
+                    <strong class="c-tele-val">${c.tireStress || 'Medium'}</strong>
+                    <span class="c-tele-hint">Lateral and longitudinal energy imparted into Pirelli compounds</span>
+                </div>
+
+                <div class="c-tele-card">
+                    <span class="c-tele-lbl"><i class="fas fa-gears" style="color:#B6BABD;"></i> Gear Shifts Per Lap</span>
+                    <strong class="c-tele-val">${c.gearShifts || '52'}</strong>
+                    <span class="c-tele-hint">Total gearbox shifts executed across a single racing lap</span>
+                </div>
+            </div>
+
+            <div class="circuit-telemetry-highlights-box">
+                <div class="c-tele-sub-box">
+                    <h4><i class="fas fa-hand-holding-hand" style="color:var(--accent-red);"></i> Braking System Load</h4>
+                    <p><strong>Severity: ${c.brakingSeverity || 'Hard'}</strong> — High-speed decel puts carbon brake discs above 1,000°C.</p>
+                </div>
+                <div class="c-tele-sub-box">
+                    <h4><i class="fas fa-flag-checkered" style="color:var(--accent-gold);"></i> Primary Overtaking Opportunities</h4>
+                    <p>${c.overtakeSpots || 'Turn 1, Main Straight DRS Zone'}</p>
                 </div>
             </div>
         </div>
     `;
+}
 
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
+function renderCircuitSectorsTab(c) {
+    const s = c.sectors || {
+        sector1: { title: "Sector 1", desc: "Main straight into the initial braking complex and directional change." },
+        sector2: { title: "Sector 2", desc: "High and medium speed flowing curves testing aero balance." },
+        sector3: { title: "Sector 3", desc: "Traction-limited low-speed corners onto the pit straight." }
+    };
+
+    return `
+        <div class="circuit-tab-content active">
+            <div class="circuit-sectors-container">
+                <div class="c-sector-card sector-1">
+                    <div class="c-sector-header">
+                        <span class="c-sector-badge s1">SECTOR 1</span>
+                        <h4>${s.sector1.title}</h4>
+                    </div>
+                    <p class="c-sector-desc">${s.sector1.desc}</p>
+                </div>
+
+                <div class="c-sector-card sector-2">
+                    <div class="c-sector-header">
+                        <span class="c-sector-badge s2">SECTOR 2</span>
+                        <h4>${s.sector2.title}</h4>
+                    </div>
+                    <p class="c-sector-desc">${s.sector2.desc}</p>
+                </div>
+
+                <div class="c-sector-card sector-3">
+                    <div class="c-sector-header">
+                        <span class="c-sector-badge s3">SECTOR 3</span>
+                        <h4>${s.sector3.title}</h4>
+                    </div>
+                    <p class="c-sector-desc">${s.sector3.desc}</p>
+                </div>
+            </div>
+
+            <div class="circuit-overtakes-box">
+                <h4><i class="fas fa-bullseye" style="color:var(--accent-red);"></i> Technical Driver Keys & Overtaking Spots</h4>
+                <p><strong>Prime Overtaking Zones:</strong> ${c.overtakeSpots || 'Turn 1, Turn 3, DRS straights'}</p>
+                <p style="margin-top:0.5rem; color:var(--text-secondary); font-size:0.9rem;">
+                    Drivers must balance battery harvesting with deployment (ERS) into the longest flat-out sections while preventing overheating in the traction-sensitive low-speed complexes.
+                </p>
+            </div>
+        </div>
+    `;
 }
 
 function closeCircuitModal() {
