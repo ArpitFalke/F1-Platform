@@ -80,13 +80,13 @@ f1-stream/
 
 ## 🚀 How to Run
 
-Open `index.html` directly in your browser, or launch a local HTTP server (recommended so `document.cookie` and `BroadcastChannel` operate smoothly across tabs on `localhost`):
+Open `index.html` directly in your browser, or run the included high-concurrency Node server (recommended so cookies and multi-tab real-time chat operate cleanly across tabs on `localhost`):
 
 ```bash
 cd "C:\Users\PC World\.gemini\antigravity\scratch\f1-stream"
-python -m http.server 8080
+node server.js
 ```
-Then open `http://localhost:8080`.
+Then open `http://localhost:8090`.
 
 ---
 

@@ -205,8 +205,12 @@
                 </div>
 
                 <div class="player-wrapper">
-                    <div class="player-container">
-                        <iframe src="https://westreamf1.st/westreamf1.php" loading="lazy" name="frame" scrolling="no" frameborder="0" allow="fullscreen" allowfullscreen height="100%" width="100%"></iframe>
+                    <div class="player-container" id="livePlayerContainer">
+                        <div class="player-loading-overlay" id="playerLoadingOverlay">
+                            <div class="player-spinner"></div>
+                            <p>Connecting to Live Broadcast Stream...</p>
+                        </div>
+                        <iframe id="liveStreamFrame" data-src="https://westreamf1.st/westreamf1.php" name="frame" scrolling="no" frameborder="0" allow="fullscreen" allowfullscreen height="100%" width="100%"></iframe>
                     </div>
                     <div class="player-controls-bar">
                         <div class="player-info">

@@ -414,7 +414,9 @@ function saveLegalCookiePrefs() {
     switchLegalTab('cookies');
 }
 
-// Initialize Cookie & Legal system after full page load so the 10-second popup timer runs accurately
-window.addEventListener('load', () => {
+// Initialize Cookie & Legal system cleanly once DOM is interactive
+if (document.readyState !== 'loading') {
     CookieManager.init();
-});
+} else {
+    document.addEventListener('DOMContentLoaded', () => CookieManager.init());
+}

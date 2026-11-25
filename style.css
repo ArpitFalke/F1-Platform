@@ -29,7 +29,7 @@
     --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.4);
     --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.6);
     --shadow-glow: 0 0 35px rgba(225, 6, 0, 0.22);
-    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease, background-color 0.22s ease, border-color 0.22s ease, color 0.22s ease, box-shadow 0.25s ease;
     --font-primary: 'Titillium Web', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-display: 'Orbitron', monospace, sans-serif;
 }
@@ -68,11 +68,12 @@ body {
     align-items: center;
     justify-content: center;
     z-index: 10000;
-    transition: opacity 0.5s ease, visibility 0.5s ease;
+    transition: opacity 0.38s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.38s ease;
 }
 .loader.hidden {
     opacity: 0;
     visibility: hidden;
+    pointer-events: none;
 }
 .loader-content {
     text-align: center;
@@ -105,7 +106,7 @@ body {
     width: 0;
     background: linear-gradient(90deg, var(--accent-red), var(--accent-orange), var(--accent-gold));
     border-radius: 4px;
-    animation: loadBar 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation: loadBar 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 @keyframes loadBar {
     to { width: 100%; }
@@ -3560,8 +3561,8 @@ body {
 }
 
 @keyframes bgPulseGlow {
-    0%, 100% { opacity: 0.75; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.04); }
+    0%, 100% { opacity: 0.72; }
+    50% { opacity: 1; }
 }
 
 @keyframes shimmerSweep {
@@ -3570,34 +3571,82 @@ body {
 }
 
 .section.active {
-    animation: fadeSlideUp 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: fadeInOverlay 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal-pending {
+    opacity: 0;
 }
 
 .reveal-animate {
-    opacity: 0;
-    animation: fadeSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    will-change: transform, opacity;
+    animation: fadeSlideUp 0.42s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.circuit-tab-content.active {
+    animation: fadeInOverlay 0.24s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .hero-bg {
-    animation: bgPulseGlow 9s ease-in-out infinite;
+    will-change: opacity;
+    animation: bgPulseGlow 7s ease-in-out infinite;
 }
 
 .hero-content .live-badge {
-    animation: fadeSlideUp 0.5s ease both;
+    animation: fadeSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 .hero-content h1 {
-    animation: fadeSlideUp 0.55s 0.08s ease both;
+    animation: fadeSlideUp 0.5s 0.06s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 .hero-content .hero-subtitle {
-    animation: fadeSlideUp 0.55s 0.16s ease both;
+    animation: fadeSlideUp 0.5s 0.12s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 .hero-content .hero-actions {
-    animation: fadeSlideUp 0.55s 0.24s ease both;
+    animation: fadeSlideUp 0.5s 0.18s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 
 .points-bar {
     transform-origin: left center;
-    animation: barGrowX 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+    animation: barGrowX 0.65s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+/* Stream Player Loading Overlay */
+.player-container {
+    position: relative;
+}
+.player-loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #0d0e1a 0%, #151629 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    z-index: 2;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+.player-loading-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+.player-loading-overlay p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
+}
+.player-spinner {
+    width: 42px;
+    height: 42px;
+    border: 3px solid rgba(255, 255, 255, 0.12);
+    border-top-color: var(--accent-red);
+    border-radius: 50%;
+    animation: spinStream 0.8s linear infinite;
+}
+@keyframes spinStream {
+    to { transform: rotate(360deg); }
 }
 
 @keyframes barGrowX {

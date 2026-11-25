@@ -38,16 +38,16 @@ function getCircuitMap(slug) {
 }
 
 // ===== APPLICATION INITIALIZATION =====
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        document.getElementById('loader')?.classList.add('hidden');
-    }, 1100);
+let appInitialized = false;
 
-    // Initialize sub-systems
+function initApp() {
+    if (appInitialized) return;
+    appInitialized = true;
+
+    // Render all views immediately once DOM is parsed (no waiting for slow external images/iframes)
     if (typeof ChatSystem !== 'undefined') ChatSystem.init();
     if (typeof updateAuthUI !== 'undefined') updateAuthUI();
 
-    // Render Views
     renderNextRace();
     renderChampionshipBattle();
     renderHighlights('all');
@@ -57,21 +57,111 @@ window.addEventListener('load', () => {
     renderConstructorStandings();
     renderDrivers();
     renderTeams();
-    triggerPageAnimations('home');
-});
 
-// ===== SMOOTH PAGE & CARD ANIMATIONS =====
+    // Dismiss loader smoothly after snappy 420ms intro
+    const loader = document.getElementById('loader');
+    if (loader) {
+        setTimeout(() => {
+            loader.classList.add('hidden');
+            triggerPageAnimations('home');
+        }, 420);
+    } else {
+        triggerPageAnimations('home');
+    }
+}
+
+if (document.readyState !== 'loading') {
+    initApp();
+} else {
+    document.addEventListener('DOMContentLoaded', initApp);
+}
+
+// Fail-safe fallback in case DOMContentLoaded fired unexpectedly
+setTimeout(() => {
+    document.getElementById('loader')?.classList.add('hidden');
+}, 1400);
+
+// ===== LAZY STREAM LOADING =====
+function ensureLiveStreamLoaded() {
+    const iframe = document.getElementById('liveStreamFrame');
+    const overlay = document.getElementById('playerLoadingOverlay');
+    if (!iframe) return;
+
+    const targetSrc = iframe.dataset.src;
+    if (targetSrc && !iframe.getAttribute('src')) {
+        if (overlay) overlay.classList.remove('hidden');
+        const hideOverlay = () => overlay?.classList.add('hidden');
+        iframe.addEventListener('load', hideOverlay, { once: true });
+        setTimeout(hideOverlay, 3500);
+        iframe.src = targetSrc;
+    }
+}
+
+// ===== SMOOTH ZERO-REFLOW SCROLL & CARD ANIMATIONS =====
+let activeRevealObserver = null;
+
 function triggerPageAnimations(sectionId) {
     const section = document.getElementById(sectionId);
     if (!section) return;
 
+    if (activeRevealObserver) {
+        activeRevealObserver.disconnect();
+        activeRevealObserver = null;
+    }
+
     const animSelectors = '.stat-card, .battle-driver-box, .quick-card, .news-card, .highlight-card, .race-card, .circuit-card, .standings-row:not(.header), .driver-card, .team-card, .live-info-card';
-    const items = section.querySelectorAll(animSelectors);
-    items.forEach((el, idx) => {
-        el.classList.remove('reveal-animate');
-        void el.offsetWidth; // trigger reflow for smooth replay
-        el.style.animationDelay = `${Math.min(idx * 45, 450)}ms`;
+    const items = Array.from(section.querySelectorAll(animSelectors));
+    if (items.length === 0) return;
+
+    // Clean any lingering animation state without triggering synchronous per-element reflow
+    items.forEach(el => {
+        el.classList.remove('reveal-animate', 'reveal-pending');
+        el.style.animationDelay = '';
+    });
+
+    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced || typeof IntersectionObserver === 'undefined') return;
+
+    let batchIndex = 0;
+
+    const revealElement = (el, delayMs) => {
+        el.classList.remove('reveal-pending');
+        el.style.animationDelay = `${delayMs}ms`;
         el.classList.add('reveal-animate');
+        el.addEventListener('animationend', () => {
+            el.classList.remove('reveal-animate');
+            el.style.animationDelay = '';
+        }, { once: true });
+    };
+
+    activeRevealObserver = new IntersectionObserver((entries, observer) => {
+        let localStagger = 0;
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const target = entry.target;
+            observer.unobserve(target);
+            revealElement(target, Math.min(localStagger * 35, 245));
+            localStagger++;
+        });
+    }, {
+        root: null,
+        rootMargin: '0px 0px 40px 0px',
+        threshold: 0.04
+    });
+
+    // Single frame batch: animate visible cards right away, observe below-fold cards
+    requestAnimationFrame(() => {
+        const vh = window.innerHeight || 800;
+        items.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < vh + 60) {
+                revealElement(el, Math.min(batchIndex * 35, 245));
+                batchIndex++;
+            } else {
+                el.classList.add('reveal-pending');
+                activeRevealObserver.observe(el);
+            }
+        });
     });
 }
 
@@ -80,7 +170,13 @@ function navigateTo(sectionId) {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     const target = document.getElementById(sectionId);
     if (target) {
+        // Reset scroll before section fades in so smooth scroll does not fight card reveal animations
+        window.scrollTo({ top: 0, behavior: 'instant' });
         target.classList.add('active');
+
+        if (sectionId === 'live') {
+            ensureLiveStreamLoaded();
+        }
         triggerPageAnimations(sectionId);
     }
 
@@ -90,7 +186,6 @@ function navigateTo(sectionId) {
 
     document.getElementById('mobileNav')?.classList.remove('active');
     document.getElementById('hamburger')?.classList.remove('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(link => {
@@ -369,8 +464,13 @@ function renderHighlights(filter = 'all', searchQuery = '') {
     `).join('');
 }
 
+let highlightSearchTimer = null;
 function filterHighlights(query) {
-    renderHighlights(currentHighlightFilter, query);
+    clearTimeout(highlightSearchTimer);
+    highlightSearchTimer = setTimeout(() => {
+        renderHighlights(currentHighlightFilter, query);
+        triggerPageAnimations('highlights');
+    }, 120);
 }
 
 // Tab Switching for Highlights Filter
@@ -380,6 +480,7 @@ document.querySelectorAll('#highlightsFilterTabs [data-highlight-filter]').forEa
         tab.classList.add('active');
         const searchVal = document.getElementById('highlightsSearchInput')?.value || '';
         renderHighlights(tab.dataset.highlightFilter, searchVal);
+        triggerPageAnimations('highlights');
     });
 });
 
@@ -625,8 +726,13 @@ function renderCircuits(filter = 'all', query = '') {
     `).join('');
 }
 
+let circuitSearchTimer = null;
 function handleCircuitSearch(query) {
-    renderCircuits(currentCircuitFilter, query);
+    clearTimeout(circuitSearchTimer);
+    circuitSearchTimer = setTimeout(() => {
+        renderCircuits(currentCircuitFilter, query);
+        triggerPageAnimations('circuits');
+    }, 120);
 }
 
 function filterCircuits(query) {
@@ -640,11 +746,18 @@ document.querySelectorAll('#circuitFilterTabs [data-circuit-filter]').forEach(ta
         tab.classList.add('active');
         const searchVal = document.getElementById('circuitFilterInput')?.value || '';
         renderCircuits(tab.dataset.circuitFilter, searchVal);
+        triggerPageAnimations('circuits');
     });
 });
 
 // ===== CIRCUIT DETAIL MODAL & TELEMETRY HUB =====
 let activeCircuitTabState = 'overview';
+
+function getCircuitTabMarkup(c, activeTab) {
+    if (activeTab === 'telemetry') return renderCircuitTelemetryTab(c);
+    if (activeTab === 'sectors') return renderCircuitSectorsTab(c);
+    return renderCircuitOverviewTab(c);
+}
 
 function openCircuitModal(circuitId, activeTab = 'overview') {
     const c = circuitsData.find(item => item.id === circuitId) || circuitsData[0];
@@ -663,21 +776,21 @@ function openCircuitModal(circuitId, activeTab = 'overview') {
 
             <!-- Modal Nav Tabs -->
             <div class="circuit-modal-nav-tabs">
-                <button class="c-tab-btn ${activeTab === 'overview' ? 'active' : ''}" onclick="switchCircuitModalTab('${c.id}', 'overview')">
+                <button class="c-tab-btn ${activeTab === 'overview' ? 'active' : ''}" data-c-tab="overview" onclick="switchCircuitModalTab('${c.id}', 'overview')">
                     <i class="fas fa-map"></i> Overview & Layout
                 </button>
-                <button class="c-tab-btn ${activeTab === 'telemetry' ? 'active' : ''}" onclick="switchCircuitModalTab('${c.id}', 'telemetry')">
+                <button class="c-tab-btn ${activeTab === 'telemetry' ? 'active' : ''}" data-c-tab="telemetry" onclick="switchCircuitModalTab('${c.id}', 'telemetry')">
                     <i class="fas fa-gauge-high"></i> Telemetry & Specs
                 </button>
-                <button class="c-tab-btn ${activeTab === 'sectors' ? 'active' : ''}" onclick="switchCircuitModalTab('${c.id}', 'sectors')">
+                <button class="c-tab-btn ${activeTab === 'sectors' ? 'active' : ''}" data-c-tab="sectors" onclick="switchCircuitModalTab('${c.id}', 'sectors')">
                     <i class="fas fa-layer-group"></i> Sector Analysis & Overtaking
                 </button>
             </div>
         </div>
         <div class="circuit-modal-body">
-            ${activeTab === 'overview' ? renderCircuitOverviewTab(c) : ''}
-            ${activeTab === 'telemetry' ? renderCircuitTelemetryTab(c) : ''}
-            ${activeTab === 'sectors' ? renderCircuitSectorsTab(c) : ''}
+            <div id="circuitModalTabBody">
+                ${getCircuitTabMarkup(c, activeTab)}
+            </div>
 
             <!-- Action Footer -->
             <div class="circuit-modal-footer-bar">
@@ -701,7 +814,17 @@ function openCircuitModal(circuitId, activeTab = 'overview') {
 }
 
 function switchCircuitModalTab(circuitId, tabName) {
-    openCircuitModal(circuitId, tabName);
+    const c = circuitsData.find(item => item.id === circuitId);
+    const tabBody = document.getElementById('circuitModalTabBody');
+    if (!c || !tabBody) {
+        openCircuitModal(circuitId, tabName);
+        return;
+    }
+    activeCircuitTabState = tabName;
+    document.querySelectorAll('.c-tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.cTab === tabName);
+    });
+    tabBody.innerHTML = getCircuitTabMarkup(c, tabName);
 }
 
 function renderCircuitOverviewTab(c) {
@@ -1088,11 +1211,16 @@ function togglePiP() {
 }
 
 function reloadStream() {
-    const iframe = document.querySelector('.player-container iframe');
+    const iframe = document.getElementById('liveStreamFrame') || document.querySelector('.player-container iframe');
+    const overlay = document.getElementById('playerLoadingOverlay');
     if (iframe) {
-        const src = iframe.src;
+        const target = iframe.dataset.src || iframe.src;
+        if (overlay) overlay.classList.remove('hidden');
+        const hideOverlay = () => overlay?.classList.add('hidden');
+        iframe.addEventListener('load', hideOverlay, { once: true });
+        setTimeout(hideOverlay, 3500);
         iframe.src = '';
-        setTimeout(() => { iframe.src = src; }, 200);
+        setTimeout(() => { iframe.src = target; }, 120);
     }
 }
 
